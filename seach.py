@@ -3,10 +3,7 @@ def search_line(array, valor):
     for i in range(len(array)):
         if array[i] == valor:
             list_indice.append(i)
-    if list_indice:
-        return list_indice
-    else:
-        return -1
+    return list_indice
 
 def search_binary(array, valor):
     inicio = 0
@@ -18,7 +15,7 @@ def search_binary(array, valor):
             return meio
         if valor > array[meio]:
             inicio = meio + 1
-        if valor < array[meio]:
+        else:
             final = meio - 1
 
     return -1

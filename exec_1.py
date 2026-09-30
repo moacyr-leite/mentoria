@@ -1,10 +1,25 @@
 history = [
- { "version": 1, "tests": "success" },
- { "version": 2, "tests": "success" },
- { "version": 3, "tests": "success" },
- { "version": 4, "tests": "failed" },
- { "version": 5, "tests": "failed" }
-]
+ { "version": 1,  "tests": "success" },
+ { "version": 2,  "tests": "success" },
+ { "version": 3,  "tests": "success" },
+ { "version": 4,  "tests": "success" },
+ { "version": 5,  "tests": "success" },
+ { "version": 6,  "tests": "success" },
+ { "version": 7,  "tests": "success" },
+ { "version": 8,  "tests": "success" },
+ { "version": 9,  "tests": "success" },
+ { "version": 10, "tests": "success" },
+ { "version": 11, "tests": "success" },
+ { "version": 12, "tests": "success" },
+ { "version": 13, "tests": "success" },
+ { "version": 14, "tests": "failed" },
+ { "version": 15, "tests": "failed" },
+ { "version": 16, "tests": "failed" },
+ { "version": 17, "tests": "failed" },
+ { "version": 18, "tests": "failed" },
+ { "version": 19, "tests": "failed" },
+ { "version": 20, "tests": "failed" } ]
+
 
 
 def search_bug(history):
@@ -21,8 +36,26 @@ def search_bug(history):
             inicio += meio + 1
         else:
             final -= meio - inicio
-        
-#print(search_bug(history))
+
+def find_bug(history):
+    inicio = 0
+    final = len(history)
+    verificações = 0
+
+    while inicio <= final:
+        meio = (inicio + final) // 2
+        h_meio = history[meio]
+        h_meio_1 = history[meio + 1]
+        if h_meio["tests"] == "success" and h_meio_1["tests"] == "failed":
+            print(f"Foram feitas {verificações} verificações, levando um tempo de {verificações*2} minutos")
+            return h_meio_1["version"]
+        if h_meio["tests"] == "success":
+            verificações += 1
+            inicio = meio
+        else:
+            verificações += 1
+            final = meio
+print(find_bug(history))
 
 def search_in_system(system):
     visitados = []
@@ -50,4 +83,4 @@ system = {
     "auth":[]
 }
 
-print(search_in_system(system))
+#print(search_in_system(system))

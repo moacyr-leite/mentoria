@@ -8,11 +8,13 @@ class Node:
     def add_son(self, valor):
         if valor > self.valor and not self.s_sup:
             self.s_sup = Node(valor)
+            return 
         elif valor > self.valor and self.s_sup:
             self.s_sup.add_son(valor)
             return
         if valor < self.valor and not self.s_inf:
             self.s_inf = Node(valor)
+            return
         elif valor < self.valor and self.s_inf:
             self.s_inf.add_son(valor)
             return
