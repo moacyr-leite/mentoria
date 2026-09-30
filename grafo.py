@@ -1,13 +1,12 @@
-array = [5,3,8,4,2,1,38,27,43,3,9,82,10, 32,8,3,10,1,6,14,4,7]
-array_empyt = []
-_array = [1,2,3,4,5]
-
 class Vertice:
     def __init__(self, nome):
         self.nome = nome
         self.conect = []
         
     def __str__(self):
+        return f"{self.nome}"
+    
+    def __repr__(self):
         return f"{self.nome}"
 
 class Aresta:
@@ -63,7 +62,12 @@ class Grafo:
 list_adjacencia = [
     ["A", "B", "C", "D", "E", "F"],
     [
-        ["B", "D", "F"]
+        [("B"), ("D"), ("F")] # A
+        [("A"), ("C"), ("E")] # B
+        [("B"), ("D"), ("E")] # C
+        [("A"), ("C"), ("F")] # D
+        [("B"), ("C"), ("F")] # E
+        [("A"), ("D"), ("E")] # F
     ]
 ]
 grafo = Grafo()
