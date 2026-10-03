@@ -14,8 +14,8 @@ def is_palidromo(text:str):
             return False
     return True
 
-#for string in ["arara", "banana", "A Santa no Natal", "Was it a car or a cat I saw"]:
-#    print(is_palidromo(string))
+'''for string in ["arara", "banana", "A Santa no Natal", "Was it a car or a cat I saw"]:
+    print(is_palidromo(string))'''
 
 def factorial(int):
     if int == 0:
@@ -28,8 +28,8 @@ def factorial_iterativo(int):
         result *= numero
     return result
 
-#for i_test in range(21):    
-#    print(f"O fatorial de {i_test} é {factorial_iterativo(i_test)}")
+'''for i_test in range(21):    
+    print(f"O fatorial de {i_test} é {factorial_iterativo(i_test)}")'''
 
 def fibonacci_recursiva_i(n):
     if n == 0:
@@ -64,55 +64,91 @@ def fibonacci_sequencia(n):
         sequencia.append(fibonacci_iterativo(num))
     return sequencia
 
-#for fibonacci in [fibonacci_recursiva_i, fibonacci_iterativo, fibonacci_sequencia]:
-#    formato = "%H:%M:%S"
-#    agora = datetime.now()
-#    print(f"Iniciando registro às {agora.strftime(formato)}")
-#    print(fibonacci(40))
-#    fim = datetime.now()
-#    print(f"FInalizado às {fim.strftime("%H:%M:%S")}")
-#    print(f"Tempo de execução: {fim - agora}")
+'''for fibonacci in [fibonacci_recursiva_i, fibonacci_iterativo, fibonacci_sequencia]:
+    formato = "%H:%M:%S"
+    agora = datetime.now()
+    print(f"Iniciando registro às {agora.strftime(formato)}")
+    print(fibonacci(40))
+    fim = datetime.now()
+    print(f"FInalizado às {fim.strftime("%H:%M:%S")}")
+    print(f"Tempo de execução: {fim - agora}")'''
+
+cache = {
+    1:{"passos":0, "max_num":1}
+} # {result: {"passos":0,"max_num":0}}
 
 def collatz(num):
-    pasos = 0
-    max_num = 1
-    sequencia = [num]
+    caminho=[]
     result = num
-    cache = {} # {result: {"sequencia":[],"pasos":0,"max_num":0}} # Melhorar Cache
-    while result != 1:
-        if result in cache.keys():
-            sequencia.append(cache[result]["sequencia"])
-            pasos += cache[result]["pasos"]
-            max_num = cache[result]["max_num"] if max_num < cache[result]["max_num"] else max_num
 
-            return sequencia, pasos, max_num
-        else:
-            cache[result] = {}
-            cache[result]["sequencia"] = sequencia
-            cache[result]["pasos"] = pasos
-            cache[result]["max_num"] = max_num
-        
-        if result > max_num:
-            max_num = int(result)
+    while result not in cache:
+        caminho.append(result)
+
         if result % 2 == 0:
-            result = result / 2
-            sequencia.append(int(result))
-            pasos += 1
-            continue
-        if result % 2 == 1:
-            result = (result * 3) + 1
-            sequencia.append(int(result))
-            pasos += 1
-            continue 
-    
-    return sequencia, pasos, max_num
+            result //= 2
+        else:
+            result = 3 * result + 1
 
-_num, _pasos = 1, 0
+    passos = cache[result]["passos"]
+    max_num = cache[result]["max_num"]
+
+    for n in reversed(caminho):
+        passos += 1
+        max_num = max(n, max_num)
+
+        cache[n] = {
+            "passos": passos,
+            "max_num": max_num
+        }
+
+    return cache[num]["passos"], cache[num]["max_num"]
+
+'''_num, _passos, _max = 1, 0, 1
 
 for i in range(1, 1000000):
-    sequencia, pasos, max_num = collatz(27)
-    print(f"{i}: {pasos} pasos")
-    if pasos > _pasos:
-        _num, _pasos = i, pasos
+    passos, max_num = collatz(i)
+    if passos > _passos:
+        _num, _passos = i, passos
+    _max = max(_max, max_num)
 
-print(_num, _pasos)
+print(_num, _passos, _max)'''
+
+def mdc(a, b):
+    if b == 0:
+        return a
+    return mdc(b, a % b)
+
+def mdc_list(list:list):
+    if len(list) == 0:
+        raise ValueError("A lista não pode ser vazia")
+    
+    if len(list) == 1:
+        return list[0]
+    
+    _list = []
+
+    if len(list) % 2 == 0:
+        for i in range(0, len(list), 2):
+            _list.append(mdc(list[i], list[i + 1]))
+        return mdc_list(_list)
+    else:
+        ultimo = list.copy().pop()
+        return mdc(mdc_list(list), ultimo)
+
+def mmc(a,b):
+    return (a * b) // mdc(a, b)
+
+'''
+pares = [(12,8),(48,18),(100,75),(17,5),(0,5)]
+_list_mdc = [12,8,48,18,100,75,17,5,0,5]
+
+for par in pares:
+    print(mdc(par[0], par[1]))
+    print(mmc(par[0], par[1]))
+
+print(mdc_list(_list_mdc))
+    '''
+
+def hanoi(n_discos): # implementar
+    return
+
