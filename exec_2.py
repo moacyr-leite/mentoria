@@ -149,6 +149,73 @@ for par in pares:
 print(mdc_list(_list_mdc))
     '''
 
-def hanoi(n_discos): # implementar
-    return
+class Pino:
+    def __init__(self, nome:str, discos:list):
+        self.nome = nome
+        self.discos = discos
 
+    def receber_disco(self, disco):
+        self.discos.append(disco)
+
+    def enviar_disco(self):
+        if not self.discos:
+            return 0
+
+        return self.discos.pop()
+    
+def hanoi(n_discos, origem:Pino, auxiliar:Pino, destino:Pino): # Dificil (Nõa estava conseguindo entender a recursão)
+    if n_discos == 1:
+        destino.receber_disco(origem.enviar_disco())
+        print(f"Mover disco de {origem.nome} para {destino.nome}")
+        return
+    
+    hanoi(n_discos - 1, origem, destino, auxiliar)
+    destino.receber_disco(origem.enviar_disco())
+    print(f"Mover disco de {origem.nome} para {destino.nome}")
+
+    hanoi(n_discos - 1, auxiliar, origem, destino)
+
+'''n_discos = 5
+
+pino_a = Pino("A", [d for d in reversed(range(1, n_discos+1))])
+pino_b = Pino("B", [])
+pino_c = Pino("C", [])
+
+hanoi(n_discos, pino_a, pino_b, pino_c)'''
+
+mapa = [
+    [1, 1, 0, 1, 0],
+    [1, 1, 0, 0, 0],
+    [0, 0, 1, 0, 1],
+    [0, 1, 0, 1, 1],
+]
+
+def n_ilhas(mapa):
+    linhas = len(mapa)
+    colunas = len(mapa[0])
+    visitados = set()
+    quant_ilhas = 0
+
+    def visitar(i, j):
+        if not (0 <= i < linhas and 0 <= j < colunas):
+            return
+
+        if mapa[i][j] == 0 or (i, j) in visitados:
+            return
+
+        visitados.add((i, j))
+
+        visitar(i - 1, j)  # cima
+        visitar(i + 1, j)  # baixo
+        visitar(i, j - 1)  # esquerda
+        visitar(i, j + 1)  # direita
+
+    for i in range(linhas):
+        for j in range(colunas):
+            if mapa[i][j] == 1 and (i, j) not in visitados:
+                quant_ilhas += 1
+                visitar(i, j)
+
+    return quant_ilhas
+
+print(n_ilhas(mapa))
