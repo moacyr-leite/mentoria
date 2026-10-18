@@ -1,31 +1,67 @@
+from pprint import pprint
+
 import requests
 
 URL = "http://127.0.0.1:8000"
 
 def exibir_estoque():
-    estoque = requests.get(f"{URL}/estoque/").json()
-
-    print("Qual produto você gostaria de adicionar ao carrinho?")
-
-    for i, produto in enumerate(estoque):
-        print(f"{i}. {produto["nome"]}\n R$ {float(produto["preco"])/100}\n Quant. {produto["quantidade"]}")
-
-    _in = int(input("\n"))
-    if _in <= len(estoque)-1:
-        produto_selecionado = estoque[_in]
-        print(f"Produto adicionado ao carrinho: {produto_selecionado["nome"]}\n")
-
-
-def main():
-    while True:
-        _in = input(f"\nO que gosaria de fazer?\n1. Comprar\n2. Exibir Carrinho\n3. Sair\n\n")
-        match _in:
-            case "1":
-                exibir_estoque()
-            case "2":
-                return 
-            case "3":
-                return
+    response = requests.get(f"{URL}/product/").json()
+    pprint(response)
 
 if __name__ == "__main__":
-    main()
+    # Exibir Estoque
+    exibir_estoque()
+    
+    cart_id = 2
+    # Criar carrinho
+    print(" Criar carrinho ".center(50, "="))
+    pprint(requests.post(f"{URL}/cart/", json={
+        "id": cart_id
+    }).json())
+    
+    
+    # Adicionar produto
+    print("  Adicionar produto  ".center(50, "="))
+    pprint(requests.post(f"{URL}/cart/add", params={
+        "cart_id": cart_id,
+        "product_id":3,
+        "amount":2
+    }).json())
+    pprint(requests.post(f"{URL}/cart/add", params={
+        "cart_id": cart_id,
+        "product_id":4,
+        "amount":1
+    }).json())
+    pprint(requests.post(f"{URL}/cart/add", params={
+        "cart_id": cart_id,
+        "product_id":5,
+        "amount":2
+    }).json())
+    
+    
+    # Remover produto
+    print("  Remover produto  ".center(50, "="))
+    pprint(requests.post(f"{URL}/cart/remove", params={
+        "cart_id": cart_id,
+        "product_id":4,
+        "amount":1
+    }).json())
+    
+    
+    # Aplicar deconto
+    print("  Aplicar deconto  ".center(50, "="))
+    pprint(requests.post(f"{URL}/salecart/{cart_id}/apply-coupon", params={
+        "cart_id": cart_id,
+        "coupon_code": "promo10" # Wrong coupon
+    }).json())
+    pprint(requests.post(f"{URL}/salecart/{cart_id}/apply-coupon", params={
+        "cart_id": cart_id,
+        "coupon_code": "OFERTA5" # Correct coupon
+    }).json())
+    
+    
+    # Finalizar compra
+    print("  Finalizar compra  ".center(50, "="))
+    pprint(requests.post(f"{URL}/checkout/{cart_id}", params={
+        "payment_method": "pix"
+    }).json())

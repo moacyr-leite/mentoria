@@ -1,0 +1,30 @@
+{
+  "price": 79.9,
+  "amount": 0,
+  "id": 1,
+  "name": "Mouse sem fio"
+},
+{
+  "price": 249.9,
+  "amount": 2,
+  "id": 2,
+  "name": "Teclado mecânico"
+},
+{
+  "price": 159.9,
+  "amount": 3,
+  "id": 3,
+  "name": "Fone de ouvido bluetooth"
+},
+{
+  "price": 199.9,
+  "amount": 1,
+  "id": 4,
+  "name": "Webcam Full HD"
+},
+{
+  "price": 119.9,
+  "amount": 3,
+  "id": 5,
+  "name": "Carregador USB-C"
+}
