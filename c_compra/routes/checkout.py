@@ -4,7 +4,20 @@ from sqlmodel import Session, select
 from schema import StandardResponse
 from models import Cart, SaleCart
 from engine import engine
+'''
+class PaymentMethod(StrEnum):
+    PIX = "pix"
+    CREDIT_CARD = "credit_card"
 
+PAYMENT_DISCOUNT = {
+    PaymentMethod.PIX: Decimal("0.05"),
+    PaymentMethod.CREDIT_CARD: Decimal("0"),
+}
+
+def calculate_total(subtotal: Decimal, coupon_rate: Decimal, method: PaymentMethod) -> Decimal:
+    total = subtotal * (1 - coupon_rate) * (1 - PAYMENT_DISCOUNT[method])
+    return total.quantize(Decimal("0.01"))
+'''
 router_checkout = APIRouter(prefix="/checkout", tags=["Checkout"])
 
 @router_checkout.post("/{cart_id}")

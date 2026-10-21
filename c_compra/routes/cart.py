@@ -1,5 +1,6 @@
+from db import SessionDep
 from engine import engine
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Body, HTTPException
 from sqlmodel import (Session, select)
 from sqlalchemy.orm import selectinload
 from models import Cart, ItemCart, Product, SaleCart
@@ -15,7 +16,8 @@ def change_product(cart_id, product_id, amount):
     
     with Session(engine) as session:
         db_item_cart = session.exec(statement).first()
-        
+
+        #💀
         if not db_item_cart:
             if amount <= 0:
                 raise HTTPException(status_code=400)
@@ -46,18 +48,17 @@ def change_product(cart_id, product_id, amount):
 
 ##CREATE
 @router_cart.post("/", response_model=StandardResponse[Cart])
-async def create_cart(cart: Cart):
-    with Session(engine) as session:
-        if session.get(Cart, cart.id):
-            raise HTTPException(status_code=400, detail="Existing cart!")
-        session.add(cart)
-        session.commit()
-        session.refresh(cart)
-        return StandardResponse(
-            success=True,
-            message="Sucess create cart",
-            data=cart
-        )
+async def create_cart(cart: Cart, session: SessionDep):
+    if session.get(Cart, cart.id):
+        raise HTTPException(status_code=400, detail="Existing cart!")
+    session.add(cart)
+    session.commit()
+    session.refresh(cart)
+    return StandardResponse(
+        success=True,
+        message="Sucess create cart",
+        data=cart
+    )
 
 ##READ
 @router_cart.get("/", response_model=StandardResponse[list[Cart]])
@@ -71,15 +72,19 @@ async def read_carts():
             data=carts
         )
 
-@router_cart.get("/{cart_id}", response_model=StandardResponse[list[ItemCart]])
-async def read_cart(cart_id):
+@router_cart.get("/{cart_id}", response_model=StandardResponse[Cart])
+async def read_cart(cart_id:int):
     with Session(engine) as session:
-        cart = session.get(Cart, cart_id).itens
+        cart = session.get(Cart, cart_id)
+        if not cart:
+            raise HTTPException(404, "Cart not found")
+        
         return StandardResponse(
             success=True,
             message="",
             data=cart
         )
+        
 
 """##UPDATE #######################################
 @router_cart.put("/")
@@ -117,7 +122,8 @@ async def delete_cart(cart_id: int):
 
 # ItemCart
 @router_cart.post("/add", response_model=StandardResponse[ItemCart])
-async def add_product(cart_id: int, product_id:int, amount: int = 1):
+async def add_product(cart_id: int=Body(), product_id:int=Body(), amount: int=Body(1))-> StandardResponse:
+    
     change = change_product(cart_id, product_id, amount)
     if change:
         return StandardResponse(
